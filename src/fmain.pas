@@ -591,6 +591,7 @@ type
     //check selected count and generate correct msg, parameters is lng indexs
     Function GetFileDlgStr(sLngOne, sLngMulti : String; Files: TFiles):String;
     procedure HotDirSelected(Sender:TObject);
+    procedure DirHistorySelected(Sender:TObject);
     procedure ViewHistorySelected(Sender:TObject);
     procedure ViewHistoryPrevSelected(Sender:TObject);
     procedure ViewHistoryNextSelected(Sender:TObject);
@@ -2384,7 +2385,7 @@ begin
     mi:= TMenuItem.Create(pmDirHistory);
     mi.Caption:= glsDirHistory[I];
     mi.Hint:= mi.Caption;
-    mi.OnClick:= @HotDirSelected;
+    mi.OnClick:= @DirHistorySelected;
     pmDirHistory.Items.Add(mi);
   end;
 end;
@@ -2665,6 +2666,16 @@ begin
   aPath := mbExpandFileName(aPath);
   ChooseFileSource(ActiveFrame, aPath);
 {$ENDIF}
+end;
+
+// 2013.5.30 hjkim: Split HotDir and DirHistory routine
+procedure TfrmMain.DirHistorySelected(Sender:TObject);
+var
+  aPath: String;
+begin
+  aPath := (Sender as TMenuItem).Hint;
+  aPath := mbExpandFileName(aPath);
+  ChooseFileSource(ActiveFrame, aPath);
 end;
 
 procedure TfrmMain.ViewHistorySelected(Sender: TObject);
