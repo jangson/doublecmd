@@ -4956,6 +4956,10 @@ msgstr "&Uložit v:"
 msgid "Le&ft, Right arrows change directory (Lynx-like movement)"
 msgstr "Šipky vlevo a vpravo mění adresář (jako pohyb v Lynxu)"
 
+#: tfrmoptionskeyboard.cbvimlike.caption
+msgid "Move by HJKL like VIM"
+msgstr ""
+
 #: tfrmoptionskeyboard.gbtyping.caption
 msgid "Typing"
 msgstr "Psaní"
@@ -8836,4 +8840,4 @@ msgstr "Kódování"
 #: ulng.rsviewnotfound
 msgid "%s not found!"
 msgstr "%s nenalezeno!"
-
+

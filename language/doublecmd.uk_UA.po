@@ -4802,6 +4802,10 @@ msgstr "&Зберегти в:"
 msgid "Le&ft, Right arrows change directory (Lynx-like movement)"
 msgstr "Зміна каталогу с&трілками Вліво, Вправо (Навігація в стилі Lynx)"
 
+#: tfrmoptionskeyboard.cbvimlike.caption
+msgid "Move by HJKL like VIM"
+msgstr ""
+
 #: tfrmoptionskeyboard.gbtyping.caption
 #, fuzzy
 msgid "Typing"

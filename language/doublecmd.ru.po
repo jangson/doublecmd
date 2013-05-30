@@ -4321,7 +4321,7 @@ msgstr ""
 #: tfrmoptionsfonts.btnselmainfnt.caption
 msgctxt "TFRMOPTIONSFONTS.BTNSELMAINFNT.CAPTION"
 msgid "..."
-msgstr ""
+msgstr "..."
 
 #: tfrmoptionsfonts.btnselviewerbookfnt.caption
 msgctxt "TFRMOPTIONSFONTS.BTNSELVIEWERBOOKFNT.CAPTION"
@@ -4491,6 +4491,10 @@ msgstr "&Сохранить в:"
 #: tfrmoptionskeyboard.cblynxlike.caption
 msgid "Le&ft, Right arrows change directory (Lynx-like movement)"
 msgstr "П&равая и левая стрелки изменяют каталог (Lynx-поведение)"
+
+#: tfrmoptionskeyboard.cbvimlike.caption
+msgid "Move by HJKL like VIM"
+msgstr ""
 
 #: tfrmoptionskeyboard.gbtyping.caption
 msgid "Typing"
@@ -8117,3 +8121,4 @@ msgstr "Кодировка"
 #: ulng.rsviewnotfound
 msgid "%s not found!"
 msgstr "%s не найден!"
+

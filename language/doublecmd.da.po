@@ -4625,6 +4625,10 @@ msgstr "Gem i:"
 msgid "Le&ft, Right arrows change directory (Lynx-like movement)"
 msgstr ""
 
+#: tfrmoptionskeyboard.cbvimlike.caption
+msgid "Move by HJKL like VIM"
+msgstr ""
+
 #: tfrmoptionskeyboard.gbtyping.caption
 msgid "Typing"
 msgstr ""

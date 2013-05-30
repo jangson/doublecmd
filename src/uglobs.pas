@@ -173,6 +173,7 @@ var
   gNewFilesPosition: TNewFilesPosition;
   gUpdatedFilesPosition: TUpdatedFilesPosition;
   gLynxLike:Boolean;
+  gVimLike : Boolean;
   gFirstTextSearch: Boolean;
 
   gMouseSelectionEnabled: Boolean;
@@ -991,6 +992,7 @@ begin
   gRunTerm := RunTerm;
   gOnlyOneAppInstance := False;
   gLynxLike := True;
+  gVimLike := True;
   gSortCaseSensitivity := cstNotSensitive;
   gSortNatural := False;
   gSortFolderMode := sfmSortNameShowFirst;
@@ -1538,6 +1540,7 @@ begin
   else
     gSortCaseSensitivity := cstLocale;
   gLynxLike := gIni.ReadBool('Configuration', 'LynxLike', True);
+  gVimLike := gIni.ReadBool('Configuration', 'VimLike', True);
   if gIni.ValueExists('Configuration', 'ShortFileSizeFormat') then
   begin
     if gIni.ReadBool('Configuration', 'ShortFileSizeFormat', True) then
@@ -1726,6 +1729,7 @@ begin
   else
     gIni.WriteBool('Configuration', 'CaseSensitiveSort', True);
   gIni.WriteBool('Configuration', 'LynxLike', gLynxLike);
+  gIni.WriteBool('Configuration', 'VimLike', gVimLike);
 
   gIni.WriteInteger('Configuration', 'FileSizeFormat', Ord(gFileSizeFormat));
   gIni.WriteInteger('Configuration', 'ScrollMode', Integer(gScrollMode));
@@ -1911,6 +1915,7 @@ begin
       gRunTerm := GetValue(Node, 'RunTerminal', gRunTerm);
       gOnlyOneAppInstance := GetValue(Node, 'OnlyOneAppInstance', gOnlyOneAppInstance);
       gLynxLike := GetValue(Node, 'LynxLike', gLynxLike);
+      gVimLike := GetValue(Node, 'VimLike', gVimLike);
       if LoadedConfigVersion < 5 then
       begin
         if GetValue(Node, 'SortCaseSensitive', False) = False then
@@ -2310,6 +2315,7 @@ begin
     SetValue(Node, 'RunTerminal', gRunTerm);
     SetValue(Node, 'OnlyOneAppInstance', gOnlyOneAppInstance);
     SetValue(Node, 'LynxLike', gLynxLike);
+    SetValue(Node, 'VimLike', gVimLike);
     SetValue(Node, 'FileSizeFormat', Ord(gFileSizeFormat));
     SetValue(Node, 'MinimizeToTray', gMinimizeToTray);
     SetValue(Node, 'AlwaysShowTrayIcon', gAlwaysShowTrayIcon);

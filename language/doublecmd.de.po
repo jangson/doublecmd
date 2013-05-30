@@ -2961,7 +2961,7 @@ msgstr "Vorschaubilder"
 
 #: tfrmmain.actthumbnailsview.hint
 msgid "Thumbnails View"
-msgstr "Ansicht "Vorschaubilder""
+msgstr "Ansicht \"Vorschaubilder\""
 
 #: tfrmmain.acttransferleft.caption
 msgid "Transfer dir under cursor to left window"
@@ -5149,6 +5149,10 @@ msgstr "&Speichern in:"
 #| msgid "Left, Right arrows change directory (Lynx-like movement)"
 msgid "Le&ft, Right arrows change directory (Lynx-like movement)"
 msgstr "P&feil nach links, bzw. rechts wechselt das Verzeichnis (Lynx-artiges Navigieren)"
+
+#: tfrmoptionskeyboard.cbvimlike.caption
+msgid "Move by HJKL like VIM"
+msgstr ""
 
 #: tfrmoptionskeyboard.gbtyping.caption
 msgid "Typing"

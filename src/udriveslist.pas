@@ -137,6 +137,8 @@ constructor TDrivesListPopup.Create(AOwner: TComponent; AParent: TWinControl);
 begin
   inherited Create(AOwner);
 
+  Name := 'TDrivesListPopup';
+
   ControlStyle := ControlStyle + [csNoFocus];
   Parent := AParent;
 

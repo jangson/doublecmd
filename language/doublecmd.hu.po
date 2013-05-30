@@ -4691,6 +4691,10 @@ msgstr "&Mentés ide :"
 msgid "Le&ft, Right arrows change directory (Lynx-like movement)"
 msgstr "&Bal, Jobb nyilak váltogatják a mappákat (Lynx-féle mozgás)"
 
+#: tfrmoptionskeyboard.cbvimlike.caption
+msgid "Move by HJKL like VIM"
+msgstr ""
+
 #: tfrmoptionskeyboard.gbtyping.caption
 msgid "Typing"
 msgstr "Írás"

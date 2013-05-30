@@ -4857,6 +4857,10 @@ msgstr "&Salva in:"
 msgid "Le&ft, Right arrows change directory (Lynx-like movement)"
 msgstr "Frecci sinistra, destra cambiano cartella (movimenti stile Lynx)"
 
+#: tfrmoptionskeyboard.cbvimlike.caption
+msgid "Move by HJKL like VIM"
+msgstr ""
+
 #: tfrmoptionskeyboard.gbtyping.caption
 msgid "Typing"
 msgstr "Digitazione"
@@ -8719,4 +8723,4 @@ msgstr "Codifica"
 #: ulng.rsviewnotfound
 msgid "%s not found!"
 msgstr "%s non trovato!"
-
+

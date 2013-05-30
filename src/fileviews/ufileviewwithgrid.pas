@@ -142,6 +142,19 @@ end;
 
 procedure TFileViewGrid.KeyDown(var Key: Word; Shift: TShiftState);
 begin
+  // 2013.5.28 hjkim: VIM movements by HJKL 
+  if gVimLike = True then
+  begin
+    if Key = Ord('J') then
+      Key := VK_DOWN
+    else if Key = Ord('K') then
+      Key := VK_UP
+    else if Key = Ord('B') then
+      Key := VK_PRIOR 
+    else if Key = Ord('F') then
+      Key := VK_NEXT ;
+  end;
+
 {$IFDEF LCLGTK2}
   // Workaround for GTK2 - up and down arrows moving through controls.
   if Key in [VK_UP, VK_DOWN] then

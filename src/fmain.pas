@@ -767,7 +767,7 @@ procedure TfrmMain.FormCreate(Sender: TObject);
   end;
   function GenerateTitle():String;
   begin
-    Result := Format('%s %s build %s; %s', ['Double Commander', dcVersion, dcRevision, dcBuildDate]);
+    Result := Format('%s %s build %s; %s; like VIM by Jason', ['Double Commander', dcVersion, dcRevision, dcBuildDate]);
   end;
 
 var
@@ -1834,6 +1834,7 @@ end;
 
 procedure TfrmMain.frmMainShow(Sender: TObject);
 begin
+  LoadWindowState; // 2014.5.29 hjkim workaround: Reload position because Left, top is changed using on dual monitor
   DCDebug('frmMain.frmMainShow');
   {$IF DEFINED(LCLCARBON) and DECLARED(lcl_fullversion) and (lcl_fullversion >= 093100)}
   ActiveControl:= ActiveFrame;
@@ -2575,24 +2576,56 @@ begin
   pmDirHistory.Popup(p.X, p.Y);
 end;
 
+// 2013.5.28 hjkim: Add submenu support like Total Commander but only one sub menu
 procedure TfrmMain.CreatePopUpHotDir;
 var
   mi: TMenuItem;
+  miSub: TMenuItem;
+  item: String;
   I: Integer;
+  p:TPoint;
 begin
-  // Create All popup menu
+
+  mi := nil;
   pmHotList.Items.Clear;
   for I:= 0 to glsHotDir.Count - 1 do
   begin
-    mi:= TMenuItem.Create(pmHotList);
-    if Pos('&', glsHotDir.Names[I]) = 0 then
-      mi.Caption:= '&' + glsHotDir.Names[I]
+    item := glsHotDir.Names[I];
+    if Pos('#', item) = 1 then
+    begin
+      // msgWarning(Format('## %s:%d', [item,Pos('#', item)]));
+      Delete(item,1,1);
+      miSub:= TMenuItem.Create(pmHotList);
+      if Pos('-', item) = 1 then
+        miSub.Caption := '-'
+      else if Pos('&', item) = 0 then
+        miSub.Caption := '&' + item 
+      else
+        miSub.Caption:= item;
+
+      miSub.Hint:= glsHotDir.ValueFromIndex[I];
+      miSub.OnClick:= @HotDirSelected;
+
+      if (mi <> nil) then
+        mi.Add(miSub);
+    end
     else
-      mi.Caption:= glsHotDir.Names[I];
-    mi.Hint:= glsHotDir.ValueFromIndex[I];
-    mi.OnClick:= @HotDirSelected;
-    pmHotList.Items.Add(mi);
+    begin
+      // msgWarning(Format('-- %s:%d', [item,Pos('-', item)]));
+      mi:= TMenuItem.Create(pmHotList);
+      if Pos('-', item) = 1 then
+        mi.Caption := '-'
+      else if Pos('&', item) = 0 then
+        mi.Caption := '&' + item 
+      else
+        mi.Caption:= item;
+
+      mi.Hint:= glsHotDir.ValueFromIndex[I];
+      mi.OnClick:= @HotDirSelected;
+      pmHotList.Items.Add(mi);
+    end;
   end;
+
   // now add delimiter
   mi:= TMenuItem.Create(pmHotList);
   mi.Caption:= '-';
@@ -2626,8 +2659,12 @@ begin
   // This handler is used by HotDir and DirHistory.
   // Hot dirs are only supported by filesystem.
   aPath := (Sender as TMenuItem).Hint;
+{$IF 1} // 2013.5.28 hjkim: I think this way is more useful like Total Commander
+  ExecuteCommandFromEdit(aPath, False);
+{$ELSE}
   aPath := mbExpandFileName(aPath);
   ChooseFileSource(ActiveFrame, aPath);
+{$ENDIF}
 end;
 
 procedure TfrmMain.ViewHistorySelected(Sender: TObject);
@@ -4470,6 +4507,7 @@ begin
               sDir:= NormalizePathDelimiters(Trim(sDir));
               sDir:= ReplaceTilde(IncludeTrailingBackslash(sDir));
               sDir:= GetAbsoluteFileName(ActiveFrame.CurrentPath, sDir);
+              sDir := mbExpandFileName(sDir); // 2013.5.30 hjkim 
             end;
 
           // Choose FileSource by path

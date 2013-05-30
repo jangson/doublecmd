@@ -4988,6 +4988,10 @@ msgstr "儲存位置 (&S):"
 msgid "Le&ft, Right arrows change directory (Lynx-like movement)"
 msgstr "使用左鍵及右鍵變更資料夾 (類似 Lynx 操作) (&F)"
 
+#: tfrmoptionskeyboard.cbvimlike.caption
+msgid "Move by HJKL like VIM"
+msgstr ""
+
 #: tfrmoptionskeyboard.gbtyping.caption
 msgid "Typing"
 msgstr "輸入焦點"
@@ -8861,4 +8865,4 @@ msgstr "正在編碼"
 #: ulng.rsviewnotfound
 msgid "%s not found!"
 msgstr "沒有找到 %s!"
-
+

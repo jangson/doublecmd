@@ -4443,6 +4443,10 @@ msgstr ""
 msgid "Le&ft, Right arrows change directory (Lynx-like movement)"
 msgstr ""
 
+#: tfrmoptionskeyboard.cbvimlike.caption
+msgid "Move by HJKL like VIM"
+msgstr ""
+
 #: tfrmoptionskeyboard.gbtyping.caption
 msgid "Typing"
 msgstr ""
@@ -7111,7 +7115,7 @@ msgstr ""
 
 #: ulng.rsmsgpopuphotdelete
 msgid "&Delete %s"
-msgstr ""
+msgstr "&Remove %s"
 
 #: ulng.rsmsgpresetalreadyexists
 msgid "Preset \"%s\" already exists. Overwrite?"
@@ -8046,4 +8050,4 @@ msgstr ""
 #: ulng.rsviewnotfound
 msgid "%s not found!"
 msgstr ""
-
+

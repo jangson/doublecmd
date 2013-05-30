@@ -37,6 +37,7 @@ type
   generic THMObjectInstance<InstanceClass> = class
     Instance: InstanceClass;
     KeyDownProc: TKeyEvent;
+    KeyUpProc: TKeyEvent;
   end;
 
   THMFormInstance = specialize THMObjectInstance<TCustomForm>;
@@ -193,9 +194,12 @@ type
     FSequenceStep: Integer;    // Which hotkey we are waiting for (from 0)
     FShortcutsSequence: TDynamicStringArray; // Sequence of shortcuts that has been processed since last key event
     FVersion: Integer;
+    HandleHotKeyOnKeyUp: Boolean;
     //---------------------
     procedure ClearAllHotkeys;
     //Hotkey Handler
+    procedure HotKeyHandler(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure KeyUpHandler(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure KeyDownHandler(Sender: TObject; var Key: Word; Shift: TShiftState);
     //---------------------
     //This function is called from KeyDownHandler to find registered hotkey and execute assigned action
@@ -737,6 +741,7 @@ constructor THotKeyManager.Create;
 begin
   FForms := THMForms.Create(True);
   FSequenceStep := 0;
+  HandleHotKeyOnKeyUp:= False;
 end;
 
 destructor THotKeyManager.Destroy;
@@ -1117,8 +1122,10 @@ begin
     formInstance             := THMFormInstance.Create;
     formInstance.Instance    := AForm;
     formInstance.KeyDownProc := AForm.OnKeyDown;
+    formInstance.KeyUpProc   := AForm.OnKeyUp;
     Result.Add(formInstance);
 
+    AForm.OnKeyUp := @KeyUpHandler;
     AForm.OnKeyDown := @KeyDownHandler;
     AForm.KeyPreview := True;
   end;
@@ -1153,6 +1160,7 @@ begin
       controlInstance             := THMControlInstance.Create;
       controlInstance.Instance    := AControl;
       controlInstance.KeyDownProc := AControl.OnKeyDown;
+      controlInstance.KeyUpProc   := AControl.OnKeyUp;
       Result.Add(controlInstance);
 
       //AControl.OnKeyDown := @KeyDownHandler;
@@ -1193,6 +1201,7 @@ begin
   begin
     formInstance := form.Find(AForm);
     AForm.OnKeyDown := formInstance.KeyDownProc;
+    AForm.OnKeyUp := formInstance.KeyUpProc;
     form.Delete(AForm);
   end;
 end;
@@ -1270,18 +1279,60 @@ begin
   end;
 end;
 
-procedure THotKeyManager.KeyDownHandler(Sender: TObject; var Key: Word; Shift: TShiftState);
-//------------------------------------------------------
+// 2013.5.28 hjkim: Add key up handler
+// If Hot-key have been set up to alphabet or single key for context menu pop up, it sent to context menu and then hot-key execute. 
+// So hot-key is execute on key up handler of this case.
+procedure THotKeyManager.KeyUpHandler(Sender: TObject; var Key: Word; Shift: TShiftState);
 var
-  i:                 Integer;
-  Shortcut:          TShortCut;
-  TextShortcut:      String;
   Form:              TCustomForm;
-  Control:           TWinControl;
   HMForm:            THMForm;
-  HMControl:         THMControl;
   HMFormInstance:    THMFormInstance;
-  HMControlInstance: THMControlInstance;
+  Control:           TWinControl;
+  ShiftEx:           TShiftState;
+
+  function OrigKeyUp(AKeyUpProc: TKeyEvent): Boolean;
+  begin
+    if Assigned(AKeyUpProc) then
+    begin
+      AKeyUpProc(Sender, Key, ShiftEx);
+      Result := True;
+    end
+    else
+      Result := False;
+  end;
+
+begin
+  Form := GetParentForm(Sender as TWinControl);
+  Control := Form.ActiveControl;
+  ShiftEx:= GetKeyShiftStateEx;
+
+  // Skip hot-key drive list pop menu
+  if Assigned(Control) and (Control.Name = 'TDrivesListPopup') then
+  begin
+    // no operation
+  end
+  else if HandleHotKeyOnKeyUp then
+    HotKeyHandler(Sender, Key, Shift);
+
+  HandleHotKeyOnKeyUp:= False;
+
+  if (key<>VK_UNKNOWN) then
+  begin
+    HMForm := FForms.Find(Form);
+    if Assigned(HMForm) then
+    begin
+      HMFormInstance := HMForm.Find(Form);
+      OrigKeyUp(HMFormInstance.KeyUpProc);
+    end;
+  end;
+end;
+
+procedure THotKeyManager.KeyDownHandler(Sender: TObject; var Key: Word; Shift: TShiftState);
+var
+  Form:              TCustomForm;
+  HMForm:            THMForm;
+  HMFormInstance:    THMFormInstance;
+  Control:           TWinControl;
   ShiftEx:           TShiftState;
 
   function OrigKeyDown(AKeyDownProc: TKeyEvent): Boolean;
@@ -1295,6 +1346,46 @@ var
       Result := False;
   end;
 
+begin
+  Form:= GetParentForm(Sender as TWinControl);
+  Control:= Form.ActiveControl;
+  ShiftEx:= GetKeyShiftStateEx;
+  HandleHotKeyOnKeyUp:= False;
+
+  // Skip hot-key drive list pop menu
+  if Assigned(Control) and (Control.Name = 'TDrivesListPopup') then
+  begin
+    // no operation
+  end
+  else if (Key in [VK_0..VK_9, VK_A..VK_Z]) and (Shift * [ssCtrl, ssAlt, ssMeta, ssAltGr] = []) then
+    HandleHotKeyOnKeyUp:= True
+  else
+    HotKeyHandler(Sender, Key, Shift);
+
+  if (key<>VK_UNKNOWN) then
+  begin
+    HMForm := FForms.Find(Form);
+    if Assigned(HMForm) then
+    begin
+      HMFormInstance := HMForm.Find(Form);
+      OrigKeyDown(HMFormInstance.KeyDownProc);
+    end;
+  end;
+end;
+
+procedure THotKeyManager.HotKeyHandler(Sender: TObject; var Key: Word; Shift: TShiftState);
+//------------------------------------------------------
+var
+  i:                 Integer;
+  Shortcut:          TShortCut;
+  TextShortcut:      String;
+  Form:              TCustomForm;
+  Control:           TWinControl;
+  HMForm:            THMForm;
+  HMControl:         THMControl;
+  HMFormInstance:    THMFormInstance;
+  HMControlInstance: THMControlInstance;
+  ShiftEx:           TShiftState;
 begin
   Form := GetParentForm(Sender as TWinControl);
   HMForm := FForms.Find(Form);
@@ -1358,11 +1449,13 @@ begin
       FSequenceStep := 0; // Hotkey was not matched - reset sequence.
     end;
 
+{
   if Key <> VK_UNKNOWN then
   begin
     HMFormInstance := HMForm.Find(Form);
-    OrigKeyDown(HMFormInstance.KeyDownProc);
+    OrigKey(HMFormInstance, Down);
   end;
+}
 end;
 
 end.

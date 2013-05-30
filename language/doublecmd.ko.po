@@ -5070,6 +5070,10 @@ msgstr "저장(&S):"
 msgid "Le&ft, Right arrows change directory (Lynx-like movement)"
 msgstr "좌우 화살표 키로 폴더 변경하기 (Lynx처럼 동작)"
 
+#: tfrmoptionskeyboard.cbvimlike.caption
+msgid "Move by HJKL like VIM"
+msgstr ""
+
 #: tfrmoptionskeyboard.gbtyping.caption
 #, fuzzy
 msgid "Typing"
@@ -8095,7 +8099,7 @@ msgstr "설정(&C)"
 
 #: ulng.rsmsgpopuphotdelete
 msgid "&Delete %s"
-msgstr "%s 지우기(&D)"
+msgstr "%s 지우기(&R)"
 
 #: ulng.rsmsgpresetalreadyexists
 msgid "Preset \"%s\" already exists. Overwrite?"
@@ -9065,4 +9069,4 @@ msgstr "인코딩"
 #: ulng.rsviewnotfound
 msgid "%s not found!"
 msgstr "%s 를 찾지 못했습니다!"
-
+
