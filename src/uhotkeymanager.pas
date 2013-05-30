@@ -1306,12 +1306,8 @@ begin
   Control := Form.ActiveControl;
   ShiftEx:= GetKeyShiftStateEx;
 
-  // Skip hot-key drive list pop menu
-  if Assigned(Control) and (Control.Name = 'TDrivesListPopup') then
-  begin
-    // no operation
-  end
-  else if HandleHotKeyOnKeyUp then
+  // Handle hot key on key up
+  if HandleHotKeyOnKeyUp then 
     HotKeyHandler(Sender, Key, Shift);
 
   HandleHotKeyOnKeyUp:= False;
@@ -1353,12 +1349,11 @@ begin
   HandleHotKeyOnKeyUp:= False;
 
   // Skip hot-key drive list pop menu
-  if Assigned(Control) and (Control.Name = 'TDrivesListPopup') then
+  if (Key in [VK_0..VK_9, VK_A..VK_Z]) and (Shift * [ssCtrl, ssAlt, ssMeta, ssAltGr] = []) then
   begin
-    // no operation
+    if (not (Assigned(Control) and (Control.Name = 'TDrivesListPopup'))) then
+      HandleHotKeyOnKeyUp:= True;
   end
-  else if (Key in [VK_0..VK_9, VK_A..VK_Z]) and (Shift * [ssCtrl, ssAlt, ssMeta, ssAltGr] = []) then
-    HandleHotKeyOnKeyUp:= True
   else
     HotKeyHandler(Sender, Key, Shift);
 
