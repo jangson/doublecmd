@@ -38,6 +38,7 @@ type
     Instance: InstanceClass;
     KeyDownProc: TKeyEvent;
     KeyUpProc: TKeyEvent;
+    UTF8KeyPressProc: TUTF8KeyPressEvent;
   end;
 
   THMFormInstance = specialize THMObjectInstance<TCustomForm>;
@@ -201,6 +202,7 @@ type
     procedure HotKeyHandler(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure KeyUpHandler(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure KeyDownHandler(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure UTF8KeyPress(Sender: TObject; var UTF8Key: TUTF8Char);
     //---------------------
     //This function is called from KeyDownHandler to find registered hotkey and execute assigned action
     function HotKeyEvent(Form: TCustomForm; Hotkeys: THotkeys): Boolean;
@@ -1123,10 +1125,12 @@ begin
     formInstance.Instance    := AForm;
     formInstance.KeyDownProc := AForm.OnKeyDown;
     formInstance.KeyUpProc   := AForm.OnKeyUp;
+    formInstance.UTF8KeyPressProc := AForm.OnUTF8KeyPress;
     Result.Add(formInstance);
 
     AForm.OnKeyUp := @KeyUpHandler;
     AForm.OnKeyDown := @KeyDownHandler;
+    AForm.OnUTF8KeyPress := @UTF8KeyPress;
     AForm.KeyPreview := True;
   end;
 end;
@@ -1161,6 +1165,7 @@ begin
       controlInstance.Instance    := AControl;
       controlInstance.KeyDownProc := AControl.OnKeyDown;
       controlInstance.KeyUpProc   := AControl.OnKeyUp;
+      controlInstance.UTF8KeyPressProc := AControl.OnUTF8KeyPress ;
       Result.Add(controlInstance);
 
       //AControl.OnKeyDown := @KeyDownHandler;
@@ -1202,6 +1207,7 @@ begin
     formInstance := form.Find(AForm);
     AForm.OnKeyDown := formInstance.KeyDownProc;
     AForm.OnKeyUp := formInstance.KeyUpProc;
+    AForm.OnUTF8KeyPress := formInstance.UTF8KeyPressProc;
     form.Delete(AForm);
   end;
 end;
@@ -1279,6 +1285,57 @@ begin
   end;
 end;
 
+procedure THotKeyManager.UTF8KeyPress(Sender: TObject; var UTF8Key: TUTF8Char);
+var
+  Key: Word;
+  Form:              TCustomForm;
+  HMForm:            THMForm;
+  HMFormInstance:    THMFormInstance;
+  Control:           TWinControl;
+  ShiftEx:           TShiftState;
+
+  function OrigUTF8KeyPress(AUTF8KeyPressProc: TUTF8KeyPressEvent): Boolean;
+  begin
+    if Assigned(AUTF8KeyPressProc) then
+    begin
+      AUTF8KeyPressProc(Sender, UTF8Key);
+      Result := True;
+    end
+    else
+      Result := False;
+  end;
+
+begin
+  Form := GetParentForm(Sender as TWinControl);
+  Control := Form.ActiveControl;
+  ShiftEx:= GetKeyShiftStateEx;
+  Key:= 1;
+
+  if (Ord(UTF8Key[1]) >= Ord('0')) and (Ord(UTF8Key[1]) <= Ord('9')) then
+    Key:= Ord(UTF8Key[1]) - Ord('0') + VK_0
+  else if (Ord(UTF8Key[1]) >= Ord('A')) and (Ord(UTF8Key[1]) <= Ord('Z')) then
+    Key:= Ord(UTF8Key[1]) - Ord('A') + VK_A
+  else if (Ord(UTF8Key[1]) >= Ord('a')) and (Ord(UTF8Key[1]) <= Ord('z')) then
+    Key:= Ord(UTF8Key[1]) - Ord('a') + VK_A;
+
+  // DCDebug(Format('THotKeyManager.UTF8KeyPress(key=%d, kv_key=%d)', [Ord(UTF8Key[1]), Key]));
+
+  if HandleHotKeyOnKeyUp then 
+    HotKeyHandler(Sender, Key, ShiftEx);
+
+  HandleHotKeyOnKeyUp:= False;
+
+  if (key<>VK_UNKNOWN) then
+  begin
+    HMForm := FForms.Find(Form);
+    if Assigned(HMForm) then
+    begin
+      HMFormInstance := HMForm.Find(Form);
+      OrigUTF8KeyPress(HMFormInstance.UTF8KeyPressProc);
+    end;
+  end;
+end;
+
 // 2013.5.28 hjkim: Add key up handler
 // If Hot-key have been set up to alphabet or single key for context menu pop up, it sent to context menu and then hot-key execute. 
 // So hot-key is execute on key up handler of this case.
@@ -1305,6 +1362,8 @@ begin
   Form := GetParentForm(Sender as TWinControl);
   Control := Form.ActiveControl;
   ShiftEx:= GetKeyShiftStateEx;
+
+  // DCDebug(Format('THotKeyManager.KeyUpHandler(key=%d)', [Key]));
 
   // Handle hot key on key up
   if HandleHotKeyOnKeyUp then 
