@@ -225,6 +225,8 @@ procedure TFileViewHeader.ShowPathEdit;
 begin
   with FPathLabel do
   begin
+    FPathEdit.Font.Color := gForeColor;
+    FPathEdit.Color := gBackColor2;
     FPathEdit.SetBounds(Left, Top, Width, Height);
     FPathEdit.Text := FFileView.CurrentPath;
     FPathEdit.Visible := True;

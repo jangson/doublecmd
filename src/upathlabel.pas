@@ -124,17 +124,21 @@ begin
 end;
 
 procedure TPathLabel.SetActive(Active: Boolean);
+const
+  clActive = TColor($D1B499);
+  clInActive = TColor($DBCDBF);
+
 begin
   case Active of
     False:
       begin
-        Color      := clBtnFace;
+        Color      := clInActive;
         Font.Color := clBtnText;
       end;
     True:
       begin
-        Color      := clHighlight;
-        Font.Color := clHighlightText;
+        Color      := clActive;
+        Font.Color := clBtnText;
       end;
   end;
 end;
