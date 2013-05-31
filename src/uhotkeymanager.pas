@@ -1384,11 +1384,18 @@ end;
 
 procedure THotKeyManager.KeyDownHandler(Sender: TObject; var Key: Word; Shift: TShiftState);
 var
+  i:                 Integer;
   Form:              TCustomForm;
   HMForm:            THMForm;
   HMFormInstance:    THMFormInstance;
   Control:           TWinControl;
   ShiftEx:           TShiftState;
+  HMControl:         THMControl;
+  Shortcut:          TShortCut;
+  shortcutseq:       TDynamicStringArray; // Sequence of shortcuts that has been processed since last key event
+  TextShortcut:      String;
+  hotkey: THotkey;
+  FormCommands: IFormCommands;
 
   function OrigKeyDown(AKeyDownProc: TKeyEvent): Boolean;
   begin
@@ -1403,22 +1410,48 @@ var
 
 begin
   Form:= GetParentForm(Sender as TWinControl);
+  HMForm := FForms.Find(Form);
   Control:= Form.ActiveControl;
   ShiftEx:= GetKeyShiftStateEx;
   HandleHotKeyOnKeyUp:= False;
+  Shortcut     := KeyToShortCutEx(Key, ShiftEx);
+  TextShortcut := ShortCutToTextEx(Shortcut);
 
-  // Skip hot-key drive list pop menu
+  // Handle single hot key on key press event
   if (Key in [VK_0..VK_9, VK_A..VK_Z]) and (Shift * [ssCtrl, ssAlt, ssMeta, ssAltGr] = []) then
   begin
-    if (not (Assigned(Control) and (Control.Name = 'TDrivesListPopup'))) then
-      HandleHotKeyOnKeyUp:= True;
+      // Don't handle hot key on drive pop up list but cm_Left(Right)OpenDrives
+      if ( Assigned(HMForm) and (Assigned(Control) and (Control.Name = 'TDrivesListPopup'))) then
+      begin
+        HandleHotKeyOnKeyUp:= False;
+        for i := 0 to HMForm.Controls.Count - 1 do
+        begin
+          HMControl := HMForm.Controls[i];
+          if HMControl.Name = 'Files Panel' then
+          begin
+            SetLength(shortcutseq, 1);
+            shortcutseq[0]:= TextShortcut;
+            hotkey := HMControl.Hotkeys.FindByBeginning(shortcutseq, False);
+            if Assigned(hotkey) then 
+            begin 
+              FormCommands := Form as IFormCommands;
+              if Assigned(FormCommands) then
+              begin
+                if (hotkey.Command = 'cm_RightOpenDrives') or (hotkey.Command = 'cm_LeftOpenDrives') then
+                  FormCommands.ExecuteCommand(hotkey.Command, hotkey.Params);
+              end;
+            end;
+          end;
+        end;
+      end
+      else
+        HandleHotKeyOnKeyUp:= True;
   end
   else
     HotKeyHandler(Sender, Key, Shift);
 
   if (key<>VK_UNKNOWN) then
   begin
-    HMForm := FForms.Find(Form);
     if Assigned(HMForm) then
     begin
       HMFormInstance := HMForm.Find(Form);
@@ -1482,6 +1515,8 @@ begin
           HMControlInstance := HMControl.Find(Control);
           if Assigned(HMControlInstance) then
           begin
+            // DCDebug(Format('THotKeyManager.HotKeyHandler(%s)', []));
+
             if HotKeyEvent(Form, HMControl.Hotkeys) then
             begin
               Key := VK_UNKNOWN;
