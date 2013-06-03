@@ -1,0 +1,18 @@
+  <DirectoryHotList>
+    <HotDir Name="Windwos" Path="\"/>
+    <HotDir Name="#&amp;1Desktop" Path="cd %USERPROFILE%\desktop\"/>
+    <HotDir Name="#&amp;2Documents" Path="cd %USERPROFILE%\Documents\"/>
+    <HotDir Name="#-" Path="\"/>
+    <HotDir Name="#&amp;3Start Menu" Path="cd %APPDATA%\Microsoft\Windows\Start Menu\"/>
+    <HotDir Name="#&amp;4UserProfile" Path="cd %USERPROFILE%\"/>
+    <HotDir Name="#&amp;5AppData" Path="cd %APPDATA%\"/>
+    <HotDir Name="#&amp;6ProgramFiles" Path="cd %ProgramFiles%\"/>
+    <HotDir Name="#&amp;7ProgramFiles(x86)" Path="cd %ProgramFiles(x86)%\"/>
+    <HotDir Name="#&amp;8SystemRoot" Path="cd %SystemRoot%\"/>
+    <HotDir Name="-" Path="\"/>
+    <HotDir Name="Drive" Path="\"/>
+    <HotDir Name="#&amp;CDrive" Path="cd C:\"/>
+    <HotDir Name="#-" Path="\"/>
+    <HotDir Name="#&amp;DDrive" Path="cd D:\"/>
+    <HotDir Name="#&amp;EDrive" Path="cd E:\"/>
+  </DirectoryHotList>
