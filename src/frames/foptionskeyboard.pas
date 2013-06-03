@@ -36,6 +36,7 @@ type
 
   TfrmOptionsKeyboard = class(TOptionsEditor)
     cbLynxLike: TCheckBox;
+    cbVimLike: TCheckBox;
     cbNoModifier: TComboBox;
     cbAlt: TComboBox;
     cbCtrlAlt: TComboBox;
@@ -97,6 +98,7 @@ begin
   SetAction(cbCtrlAlt, gKeyTyping[ktmCtrlAlt]);
 
   cbLynxLike.Checked := gLynxLike;
+  cbVimLike.Checked := gVimLike;
 end;
 
 function TfrmOptionsKeyboard.Save: TOptionsEditorSaveFlags;
@@ -121,6 +123,7 @@ begin
   gKeyTyping[ktmCtrlAlt] := GetAction(cbCtrlAlt);
 
   gLynxLike := cbLynxLike.Checked;
+  gVimLike := cbVimLike.Checked;
   Result := [];
 end;
 
