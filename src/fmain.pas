@@ -540,7 +540,7 @@ type
     Draging : boolean;
 
     procedure CheckCommandLine(ShiftEx: TShiftState; var Key: Word);
-    function ExecuteCommandFromEdit(sCmd: String; bRunInTerm: Boolean): Boolean;
+    function ExecuteCommandFromEdit(sCmd: String; bRunInTerm: Boolean; DoForce: Boolean = True): Boolean;
     procedure SetMainSplitterPos(AValue: Double);
     procedure UpdateActionIcons;
     procedure TypeInCommandLine(Str: String);
@@ -2661,7 +2661,7 @@ begin
   // Hot dirs are only supported by filesystem.
   aPath := (Sender as TMenuItem).Hint;
 {$IF 1} // 2013.5.28 hjkim: I think this way is more useful like Total Commander
-  ExecuteCommandFromEdit(aPath, False);
+  ExecuteCommandFromEdit(aPath, False, True);
 {$ELSE}
   aPath := mbExpandFileName(aPath);
   ChooseFileSource(ActiveFrame, aPath);
@@ -4488,7 +4488,7 @@ begin
   end;
 end;
 
-function TfrmMain.ExecuteCommandFromEdit(sCmd: String; bRunInTerm: Boolean): Boolean;
+function TfrmMain.ExecuteCommandFromEdit(sCmd: String; bRunInTerm: Boolean; DoForce: Boolean): Boolean;
 var
   iIndex: Integer;
   sDir: String;
@@ -4505,7 +4505,7 @@ begin
 
   sCmd:= ReplaceEnvVars(sCmd);
 
-  if (fspDirectAccess in ActiveFrame.FileSource.GetProperties) then
+  if DoForce or (fspDirectAccess in ActiveFrame.FileSource.GetProperties) then
     begin
       iIndex:= Pos('cd ', sCmd);
       if (iIndex = 1) or (sCmd = 'cd') then
