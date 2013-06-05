@@ -74,7 +74,7 @@ var
   sDir: String;
 begin
   if InputQuery(rsMsgManualAddHotDir, rsMsgManualHotDirQuery, sDir) then
-    lsHotDir.ItemIndex:= lsHotDir.Items.Add(IncludeTrailingBackSlash(sDir));
+    lsHotDir.ItemIndex:= lsHotDir.Items.Add(sDir);
   btnDelete.Enabled:= (lsHotDir.Items.Count > 0);
   btnEdit.Enabled:= (lsHotDir.Items.Count > 0);
 end;
@@ -86,7 +86,7 @@ begin
   if lsHotDir.Items.Count < 1 then Exit;
   sDir:= lsHotDir.Items[lsHotDir.ItemIndex];
   if InputQuery(rsMsgManualEditHotDir, rsMsgManualHotDirQuery, sDir) then
-    lsHotDir.Items[lsHotDir.ItemIndex]:= IncludeTrailingBackSlash(sDir);
+    lsHotDir.Items[lsHotDir.ItemIndex]:= sDir;
   btnDelete.Enabled:= (lsHotDir.Items.Count > 0);
   btnEdit.Enabled:= (lsHotDir.Items.Count > 0);
 end;
@@ -115,7 +115,7 @@ begin
     begin
       sName:= StringReplace(GetLastDir(sPath), '&', '&&', [rfReplaceAll]);
       if InputQuery('', rsMsgTitleNewEntryHotDir, sName) then
-        lsHotDir.ItemIndex:= lsHotDir.Items.Add(sName + '=' + IncludeTrailingPathDelimiter(sPath));
+        lsHotDir.ItemIndex:= lsHotDir.Items.Add(sName + '=cd ' + IncludeTrailingPathDelimiter(sPath));
     end;
   btnDelete.Enabled:= (lsHotDir.Items.Count > 0);
   btnEdit.Enabled:= (lsHotDir.Items.Count > 0);
