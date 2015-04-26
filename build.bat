@@ -2,6 +2,7 @@
 
 rem the next two line must be changed before run on your computer
 set lazpath=D:\Alexx\Prog\FreePascal\Lazarus
+set lazpath=c:\lazarus
 
 set PATH=%lazpath%;%PATH%
 

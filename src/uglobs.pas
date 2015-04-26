@@ -196,6 +196,7 @@ var
   gNewFilesPosition: TNewFilesPosition;
   gUpdatedFilesPosition: TUpdatedFilesPosition;
   gLynxLike:Boolean;
+  gVimLike:Boolean;
   gFirstTextSearch: Boolean;
 
   gMouseSelectionEnabled: Boolean;
@@ -1083,6 +1084,7 @@ begin
   gRunTerm := RunTerm;
   gOnlyOneAppInstance := False;
   gLynxLike := True;
+  gVimLike := True;
   gSortCaseSensitivity := cstNotSensitive;
   gSortNatural := False;
   gSortFolderMode := sfmSortNameShowFirst;
