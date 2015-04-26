@@ -428,6 +428,16 @@ procedure TDrivesListPopup.KeyDownEvent(Sender: TObject; var Key: Word;
 var
   Rect: TRect;
 begin
+
+  // 2013.5.30 hjkim: VIM movements by HJKL 
+  if gVimLike = True then
+  begin
+    if Key = Ord('J') then
+      Key := VK_DOWN
+    else if Key = Ord('K') then
+      Key := VK_UP;
+  end;
+
   case Key of
     VK_HOME, VK_PRIOR:
       begin

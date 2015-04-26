@@ -250,6 +250,7 @@ var
   gNewFilesPosition: TNewFilesPosition;
   gUpdatedFilesPosition: TUpdatedFilesPosition;
   gLynxLike:Boolean;
+  gVimLike:Boolean;
   gFirstTextSearch: Boolean;
   gExtraLineSpan: Integer;
 
@@ -1304,6 +1305,7 @@ begin
   gRunTermParams := RunTermParams;
   gOnlyOneAppInstance := False;
   gLynxLike := True;
+  gVimLike := True;
   gSortCaseSensitivity := cstNotSensitive;
   gSortNatural := False;
   gSortFolderMode := sfmSortNameShowFirst;

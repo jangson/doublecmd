@@ -947,7 +947,7 @@ procedure TfrmMain.FormCreate(Sender: TObject);
     if Length(UniqueInstance.ServernameByUser) > 0 then
       ServernameString := ' [' + UniqueInstance.ServernameByUser + ']';
 
-    Result := Format('%s%s %s build %s; %s',
+    Result := Format('%s%s %s build %s; %s; VIM key',
         ['Double Commander',
         ServernameString,
         dcVersion,
