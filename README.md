@@ -26,4 +26,4 @@ Cherry pick ADD: Add to supports the VIM key (HJKL)
 #### master branch
 get svn 5208
 
-Add all function for my VIM like function
+Add all functions for me
