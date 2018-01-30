@@ -1,7 +1,8 @@
 #!/bin/sh
 
 # DC revision number
-export DC_REVISION=$(svnversion $1 | sed -e 's/\([0-9]*\).*/\1/')
+# export DC_REVISION=$(svnversion $1 | sed -e 's/\([0-9]*\).*/\1/')
+export DC_REVISION=7980
 
 # Update dcrevision.inc
 echo "// Created by Svn2RevisionInc"      >  $2/units/dcrevision.inc
