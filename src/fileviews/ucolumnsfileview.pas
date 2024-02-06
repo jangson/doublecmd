@@ -2313,6 +2313,19 @@ begin
     Exit;
   end;
 
+  // 2013.5.28 hjkim: VIM movements by HJKL 
+  if gVimLike = True then
+  begin
+    if Key = Ord('J') then
+      Key := VK_DOWN
+    else if Key = Ord('K') then
+      Key := VK_UP
+    else if Key = Ord('B') then
+      Key := VK_PRIOR 
+    else if Key = Ord('F') then
+      Key := VK_NEXT ;
+  end;
+
   SavedKey := Key;
   // Set RangeSelecting before cursor is moved.
   ColumnsView.FRangeSelecting :=

@@ -1,6 +1,7 @@
 @echo off
 
 rem Add Lazarus installation to path
+set LAZARUS_HOME=c:\lazarus
 if [%LAZARUS_HOME%] == [] set LAZARUS_HOME=D:\Alexx\Prog\FreePascal\Lazarus
 set PATH=%LAZARUS_HOME%;%PATH%
 

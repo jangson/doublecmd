@@ -1087,7 +1087,7 @@ procedure TfrmMain.FormCreate(Sender: TObject);
       ARevision:= EmptyStr;
     end;
 
-    Result := Format('%s%s %s%s',
+    Result := Format('%s%s %s%s with VIM key',
         ['Double Commander',
         AServerName,
         Copy2Space(dcVersion),
